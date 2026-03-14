@@ -77,6 +77,35 @@
       margin-top: 18px;
     }
 
+    .picker {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(68, 44, 46, 0.2);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.84);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color 180ms ease, background 180ms ease;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .option input[type="radio"] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
     input {
       width: 100%;
       border: 1px solid rgba(68, 44, 46, 0.25);
@@ -135,12 +164,33 @@
       font-size: clamp(1.05rem, 2.6vw, 1.25rem);
     }
 
+    .secondary-btn {
+      margin-top: 4px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(68, 44, 46, 0.22);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--text);
+      font-weight: 700;
+      box-shadow: none;
+    }
+
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+      filter: none;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
     .flower {
       position: relative;
       width: 220px;
       height: 310px;
       transform-origin: bottom center;
       animation: riseIn 1s cubic-bezier(.24, 1.12, .4, 1);
+    }
+
+    .flower.hidden {
+      display: none;
     }
 
     .stem {
@@ -262,6 +312,87 @@
       z-index: 2;
     }
 
+    .tulip-head {
+      position: absolute;
+      left: 50%;
+      top: 34px;
+      width: 120px;
+      height: 120px;
+      transform: translateX(-50%);
+    }
+
+    .tulip-petal {
+      position: absolute;
+      width: 72px;
+      height: 98px;
+      border-radius: 48% 48% 52% 52%;
+      background: linear-gradient(180deg, #ff8ea1, #df3b64 70%, #be2347);
+      box-shadow: inset 0 -12px 14px rgba(104, 14, 34, 0.25);
+      opacity: 0;
+      transform-origin: bottom center;
+    }
+
+    .tulip-petal.mid {
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%) scale(0.68) translateY(26px);
+      z-index: 7;
+      animation: tulipUp 900ms ease 500ms forwards;
+    }
+
+    .tulip-petal.left {
+      left: 8px;
+      top: 22px;
+      transform: rotate(-22deg) scale(0.72) translateY(26px);
+      z-index: 6;
+      animation: tulipOpenLeft 950ms ease 700ms forwards;
+    }
+
+    .tulip-petal.right {
+      right: 8px;
+      top: 22px;
+      transform: rotate(22deg) scale(0.72) translateY(26px);
+      z-index: 6;
+      animation: tulipOpenRight 950ms ease 700ms forwards;
+    }
+
+    .sunflower-head {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      width: 150px;
+      height: 150px;
+      transform: translateX(-50%);
+    }
+
+    .sun-petal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 26px;
+      height: 62px;
+      border-radius: 50% 50% 45% 45%;
+      background: linear-gradient(180deg, #ffd66f, #f4b835);
+      transform-origin: center 65px;
+      opacity: 0;
+      animation: sunPetalIn 780ms ease forwards;
+    }
+
+    .sun-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      background: radial-gradient(circle at 30% 30%, #7a4a1e, #4f2d11 72%);
+      box-shadow: inset 0 0 10px rgba(20, 10, 2, 0.36);
+      opacity: 0;
+      animation: sunCoreIn 820ms ease 650ms forwards;
+      z-index: 3;
+    }
+
     .sparkles {
       position: absolute;
       inset: 0;
@@ -319,6 +450,31 @@
       to { opacity: 1; transform: translateX(-50%) rotate(0deg) translateY(0) scale(1); }
     }
 
+    @keyframes tulipUp {
+      from { opacity: 0; transform: translateX(-50%) scale(0.5) translateY(28px); }
+      to { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+    }
+
+    @keyframes tulipOpenLeft {
+      from { opacity: 0; transform: rotate(-6deg) scale(0.58) translateY(32px); }
+      to { opacity: 1; transform: rotate(-26deg) scale(1) translateY(0); }
+    }
+
+    @keyframes tulipOpenRight {
+      from { opacity: 0; transform: rotate(6deg) scale(0.58) translateY(32px); }
+      to { opacity: 1; transform: rotate(26deg) scale(1) translateY(0); }
+    }
+
+    @keyframes sunPetalIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(var(--rot)); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
+    }
+
+    @keyframes sunCoreIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.45); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
     @keyframes float {
       0% { transform: translateY(0) scale(0.6); opacity: 0; }
       20% { opacity: 1; }
@@ -347,7 +503,7 @@
   <main class="app" id="app">
     <section class="state active" id="state-form">
       <h1>Hai, siapa namamu?</h1>
-      <p class="intro">Masukkan namamu. Setelah itu, halaman ini akan berubah jadi bunga spesial untukmu.</p>
+      <p class="intro">Masukkan namamu. Setelah itu kamu bisa pilih bunga favoritmu.</p>
       <div class="field">
         <input id="nameInput" type="text" placeholder="Tulis nama di sini..." autocomplete="name" maxlength="40" />
         <button id="continueBtn" type="button">Lanjut</button>
@@ -355,10 +511,34 @@
       <p class="error" id="errorText"></p>
     </section>
 
+    <section class="state" id="state-select">
+      <h1>Pilih jenis bunga</h1>
+      <p class="intro">Halo <strong id="selectedNameLabel"></strong>, pilih bunga yang ingin mekar.</p>
+      <div class="picker">
+        <label class="option" for="flowerRose">
+          <input id="flowerRose" type="radio" name="flowerType" value="mawar" checked />
+          Mawar
+        </label>
+        <label class="option" for="flowerTulip">
+          <input id="flowerTulip" type="radio" name="flowerType" value="tulip" />
+          Tulip
+        </label>
+        <label class="option" for="flowerSunflower">
+          <input id="flowerSunflower" type="radio" name="flowerType" value="sunflower" />
+          Sunflower
+        </label>
+      </div>
+      <div class="field">
+        <button id="showFlowerBtn" type="button">Mekarkan Bunganya</button>
+        <button id="backToNameBtn" type="button" class="secondary-btn">Kembali</button>
+      </div>
+      <p class="error" id="selectErrorText"></p>
+    </section>
+
     <section class="state" id="state-flower" aria-live="polite">
       <div class="flower-wrap">
         <p class="message" id="flowerMessage"></p>
-        <div class="flower" role="img" aria-label="Bunga mawar mekar">
+        <div class="flower flower-rose hidden" id="flowerRoseView" role="img" aria-label="Bunga mawar mekar">
           <div class="stem"></div>
           <div class="leaf left"></div>
           <div class="leaf right"></div>
@@ -372,18 +552,60 @@
             <div class="rose-petal front"></div>
           </div>
         </div>
+        <div class="flower flower-tulip hidden" id="flowerTulipView" role="img" aria-label="Bunga tulip mekar">
+          <div class="stem"></div>
+          <div class="leaf left"></div>
+          <div class="leaf right"></div>
+          <div class="tulip-head">
+            <div class="tulip-petal left"></div>
+            <div class="tulip-petal mid"></div>
+            <div class="tulip-petal right"></div>
+          </div>
+        </div>
+        <div class="flower flower-sunflower hidden" id="flowerSunflowerView" role="img" aria-label="Bunga sunflower mekar">
+          <div class="stem"></div>
+          <div class="leaf left"></div>
+          <div class="leaf right"></div>
+          <div class="sunflower-head">
+            <div class="sun-petal" style="--rot:0deg; animation-delay: 450ms;"></div>
+            <div class="sun-petal" style="--rot:30deg; animation-delay: 510ms;"></div>
+            <div class="sun-petal" style="--rot:60deg; animation-delay: 570ms;"></div>
+            <div class="sun-petal" style="--rot:90deg; animation-delay: 630ms;"></div>
+            <div class="sun-petal" style="--rot:120deg; animation-delay: 690ms;"></div>
+            <div class="sun-petal" style="--rot:150deg; animation-delay: 750ms;"></div>
+            <div class="sun-petal" style="--rot:180deg; animation-delay: 810ms;"></div>
+            <div class="sun-petal" style="--rot:210deg; animation-delay: 870ms;"></div>
+            <div class="sun-petal" style="--rot:240deg; animation-delay: 930ms;"></div>
+            <div class="sun-petal" style="--rot:270deg; animation-delay: 990ms;"></div>
+            <div class="sun-petal" style="--rot:300deg; animation-delay: 1050ms;"></div>
+            <div class="sun-petal" style="--rot:330deg; animation-delay: 1110ms;"></div>
+            <div class="sun-core"></div>
+          </div>
+        </div>
+        <button id="resetBtn" type="button" class="secondary-btn">Ganti Nama</button>
       </div>
     </section>
   </main>
 
   <script>
     const formState = document.getElementById('state-form');
+    const selectState = document.getElementById('state-select');
     const flowerState = document.getElementById('state-flower');
     const nameInput = document.getElementById('nameInput');
     const continueBtn = document.getElementById('continueBtn');
+    const showFlowerBtn = document.getElementById('showFlowerBtn');
+    const backToNameBtn = document.getElementById('backToNameBtn');
+    const resetBtn = document.getElementById('resetBtn');
     const errorText = document.getElementById('errorText');
+    const selectErrorText = document.getElementById('selectErrorText');
+    const selectedNameLabel = document.getElementById('selectedNameLabel');
     const flowerMessage = document.getElementById('flowerMessage');
     const sparkles = document.getElementById('sparkles');
+    const flowerRoseView = document.getElementById('flowerRoseView');
+    const flowerTulipView = document.getElementById('flowerTulipView');
+    const flowerSunflowerView = document.getElementById('flowerSunflowerView');
+
+    let selectedName = '';
 
     function escapeHtml(text) {
       const div = document.createElement('div');
@@ -391,13 +613,67 @@
       return div.innerHTML;
     }
 
-    function showFlowerState(name) {
+    function getSelectedFlowerType() {
+      const picked = document.querySelector('input[name=\"flowerType\"]:checked');
+      return picked ? picked.value : '';
+    }
+
+    function setFlowerView(type) {
+      flowerRoseView.classList.add('hidden');
+      flowerTulipView.classList.add('hidden');
+      flowerSunflowerView.classList.add('hidden');
+
+      if (type === 'tulip') {
+        flowerTulipView.classList.remove('hidden');
+        return;
+      }
+
+      if (type === 'sunflower') {
+        flowerSunflowerView.classList.remove('hidden');
+        return;
+      }
+
+      flowerRoseView.classList.remove('hidden');
+    }
+
+    function showSelectState(name) {
+      selectedName = name.trim();
+      selectedNameLabel.textContent = selectedName;
+      errorText.textContent = '';
+      selectErrorText.textContent = '';
+      formState.classList.remove('active');
+      flowerState.classList.remove('active');
+      selectState.classList.add('active');
+    }
+
+    function showFlowerState(name, flowerType) {
       const safeName = escapeHtml(name.trim());
-      flowerMessage.innerHTML = 'Untuk <strong>' + safeName + '</strong>, mawar ini mekar hari ini.';
+      const labelMap = {
+        mawar: 'mawar',
+        tulip: 'tulip',
+        sunflower: 'sunflower'
+      };
+      const flowerLabel = labelMap[flowerType] || 'mawar';
+      flowerMessage.innerHTML = 'Untuk <strong>' + safeName + '</strong>, ' + flowerLabel + ' ini mekar hari ini.';
+      setFlowerView(flowerType);
 
       formState.classList.remove('active');
+      selectState.classList.remove('active');
       flowerState.classList.add('active');
       createSparkles();
+    }
+
+    function resetToFormState() {
+      flowerState.classList.remove('active');
+      selectState.classList.remove('active');
+      formState.classList.add('active');
+      flowerMessage.innerHTML = '';
+      errorText.textContent = '';
+      selectErrorText.textContent = '';
+      sparkles.innerHTML = '';
+      selectedName = '';
+      nameInput.focus();
+      nameInput.select();
     }
 
     function createSparkles() {
@@ -420,11 +696,32 @@
         nameInput.focus();
         return;
       }
-      errorText.textContent = '';
-      showFlowerState(name);
+      showSelectState(name);
+    }
+
+    function handleShowFlower() {
+      const flowerType = getSelectedFlowerType();
+      if (!flowerType) {
+        selectErrorText.textContent = 'Pilih satu jenis bunga dulu.';
+        return;
+      }
+      selectErrorText.textContent = '';
+      showFlowerState(selectedName, flowerType);
+    }
+
+    function backToNameState() {
+      selectState.classList.remove('active');
+      flowerState.classList.remove('active');
+      formState.classList.add('active');
+      selectErrorText.textContent = '';
+      nameInput.focus();
+      nameInput.select();
     }
 
     continueBtn.addEventListener('click', handleContinue);
+    showFlowerBtn.addEventListener('click', handleShowFlower);
+    backToNameBtn.addEventListener('click', backToNameState);
+    resetBtn.addEventListener('click', resetToFormState);
     nameInput.addEventListener('keydown', function (event) {
       if (event.key === 'Enter') {
         handleContinue();
