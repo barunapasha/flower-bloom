@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bunga Untukmu</title>
+  <style>
+    :root {
+      --bg-start: #fff4ec;
+      --bg-end: #ffd9c9;
+      --card: rgba(255, 255, 255, 0.72);
+      --text: #442c2e;
+      --accent: #f3726f;
+      --accent-deep: #d9534f;
+      --shadow: 0 18px 40px rgba(80, 34, 29, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 20% 20%, #fff9f5 0%, transparent 40%),
+                  radial-gradient(circle at 80% 30%, #ffd8ca 0%, transparent 45%),
+                  linear-gradient(140deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .app {
+      width: min(92vw, 560px);
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      transition: transform 450ms ease, opacity 450ms ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .state {
+      display: none;
+      animation: fadeIn 450ms ease;
+    }
+
+    .state.active {
+      display: block;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 4vw, 2.2rem);
+      margin-bottom: 10px;
+      letter-spacing: 0.4px;
+    }
+
+    p {
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    .intro {
+      margin-bottom: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid rgba(68, 44, 46, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.88);
+      outline: none;
+      transition: border-color 200ms ease, box-shadow 200ms ease;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(243, 114, 111, 0.2);
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(140deg, var(--accent), var(--accent-deep));
+      box-shadow: 0 10px 24px rgba(217, 83, 79, 0.35);
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      min-height: 18px;
+      color: #b3272d;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    .flower-wrap {
+      display: grid;
+      place-items: center;
+      gap: 14px;
+      min-height: 390px;
+    }
+
+    .message {
+      text-align: center;
+      font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+    }
+
+    .flower {
+      position: relative;
+      width: 220px;
+      height: 310px;
+      transform-origin: bottom center;
+      animation: riseIn 1s cubic-bezier(.24, 1.12, .4, 1);
+    }
+
+    .stem {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 14px;
+      height: 170px;
+      border-radius: 999px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, #72b66e, #3f7f3f);
+      box-shadow: inset 0 0 6px rgba(255,255,255,0.3);
+    }
+
+    .leaf {
+      position: absolute;
+      bottom: 92px;
+      width: 70px;
+      height: 36px;
+      background: linear-gradient(145deg, #85cb7f, #579e53);
+      border-radius: 80% 0 80% 0;
+      box-shadow: inset 0 0 4px rgba(255,255,255,0.32);
+    }
+
+    .leaf.left {
+      left: 47px;
+      transform: rotate(-28deg);
+    }
+
+    .leaf.right {
+      right: 47px;
+      transform: scaleX(-1) rotate(-28deg);
+    }
+
+    .rose {
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 165px;
+    }
+
+    .rose-core {
+      position: absolute;
+      left: 50%;
+      top: 45px;
+      width: 46px;
+      height: 74px;
+      transform: translateX(-50%) scale(0.7);
+      border-radius: 50% 50% 45% 45%;
+      background: linear-gradient(180deg, #ff8ba7, #dd375d 68%, #c7244a 100%);
+      box-shadow: inset 0 -10px 14px rgba(115, 15, 36, 0.35);
+      z-index: 8;
+      opacity: 0;
+      animation: coreBloom 850ms ease 500ms forwards;
+    }
+
+    .rose-petal {
+      position: absolute;
+      width: 72px;
+      height: 108px;
+      border-radius: 50% 50% 45% 45%;
+      background: linear-gradient(180deg, #ff95ae, #eb4b71 60%, #cf2d54 100%);
+      box-shadow: inset 0 -10px 14px rgba(125, 23, 46, 0.28);
+      transform-origin: bottom center;
+      opacity: 0;
+    }
+
+    .rose-petal.outer-left {
+      left: 8px;
+      top: 34px;
+      z-index: 4;
+      transform: rotate(-36deg) translateY(36px) scale(0.75);
+      animation: openLeft 1100ms cubic-bezier(.2,.9,.32,1) 700ms forwards;
+    }
+
+    .rose-petal.outer-right {
+      right: 8px;
+      top: 34px;
+      z-index: 4;
+      transform: rotate(36deg) translateY(36px) scale(0.75);
+      animation: openRight 1100ms cubic-bezier(.2,.9,.32,1) 700ms forwards;
+    }
+
+    .rose-petal.mid-left {
+      left: 24px;
+      top: 24px;
+      z-index: 6;
+      transform: rotate(-18deg) translateY(28px) scale(0.8);
+      animation: openLeftSoft 1000ms cubic-bezier(.2,.9,.32,1) 900ms forwards;
+    }
+
+    .rose-petal.mid-right {
+      right: 24px;
+      top: 24px;
+      z-index: 6;
+      transform: rotate(18deg) translateY(28px) scale(0.8);
+      animation: openRightSoft 1000ms cubic-bezier(.2,.9,.32,1) 900ms forwards;
+    }
+
+    .rose-petal.front {
+      left: 50%;
+      top: 62px;
+      z-index: 9;
+      transform: translateX(-50%) rotate(0deg) translateY(36px) scale(0.74);
+      animation: openFront 900ms cubic-bezier(.2,.9,.32,1) 1100ms forwards;
+    }
+
+    .rose-shadow {
+      position: absolute;
+      left: 50%;
+      top: 132px;
+      width: 116px;
+      height: 20px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(117, 23, 45, 0.32), transparent 70%);
+      filter: blur(1px);
+      z-index: 2;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      animation: float 4s linear infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes riseIn {
+      0% { transform: scale(0.2) translateY(28px); opacity: 0; }
+      55% { transform: scale(1.08) translateY(-2px); opacity: 1; }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    @keyframes coreBloom {
+      from { opacity: 0; transform: translateX(-50%) scale(0.35) translateY(18px); }
+      to { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+    }
+
+    @keyframes openLeft {
+      from { opacity: 0; transform: rotate(-10deg) translateY(42px) scale(0.65); }
+      to { opacity: 1; transform: rotate(-44deg) translateY(0) scale(1); }
+    }
+
+    @keyframes openRight {
+      from { opacity: 0; transform: rotate(10deg) translateY(42px) scale(0.65); }
+      to { opacity: 1; transform: rotate(44deg) translateY(0) scale(1); }
+    }
+
+    @keyframes openLeftSoft {
+      from { opacity: 0; transform: rotate(-4deg) translateY(34px) scale(0.7); }
+      to { opacity: 1; transform: rotate(-22deg) translateY(0) scale(1); }
+    }
+
+    @keyframes openRightSoft {
+      from { opacity: 0; transform: rotate(4deg) translateY(34px) scale(0.7); }
+      to { opacity: 1; transform: rotate(22deg) translateY(0) scale(1); }
+    }
+
+    @keyframes openFront {
+      from { opacity: 0; transform: translateX(-50%) rotate(0deg) translateY(40px) scale(0.65); }
+      to { opacity: 1; transform: translateX(-50%) rotate(0deg) translateY(0) scale(1); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(0.6); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-220px) scale(1); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 24px 18px;
+      }
+
+      .flower {
+        width: 190px;
+        height: 280px;
+      }
+
+      .rose {
+        transform: translateX(-50%) scale(0.92);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" id="sparkles"></div>
+
+  <main class="app" id="app">
+    <section class="state active" id="state-form">
+      <h1>Hai, siapa namamu?</h1>
+      <p class="intro">Masukkan namamu. Setelah itu, halaman ini akan berubah jadi bunga spesial untukmu.</p>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Tulis nama di sini..." autocomplete="name" maxlength="40" />
+        <button id="continueBtn" type="button">Lanjut</button>
+      </div>
+      <p class="error" id="errorText"></p>
+    </section>
+
+    <section class="state" id="state-flower" aria-live="polite">
+      <div class="flower-wrap">
+        <p class="message" id="flowerMessage"></p>
+        <div class="flower" role="img" aria-label="Bunga mawar mekar">
+          <div class="stem"></div>
+          <div class="leaf left"></div>
+          <div class="leaf right"></div>
+          <div class="rose">
+            <div class="rose-shadow"></div>
+            <div class="rose-petal outer-left"></div>
+            <div class="rose-petal outer-right"></div>
+            <div class="rose-petal mid-left"></div>
+            <div class="rose-petal mid-right"></div>
+            <div class="rose-core"></div>
+            <div class="rose-petal front"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const formState = document.getElementById('state-form');
+    const flowerState = document.getElementById('state-flower');
+    const nameInput = document.getElementById('nameInput');
+    const continueBtn = document.getElementById('continueBtn');
+    const errorText = document.getElementById('errorText');
+    const flowerMessage = document.getElementById('flowerMessage');
+    const sparkles = document.getElementById('sparkles');
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    function showFlowerState(name) {
+      const safeName = escapeHtml(name.trim());
+      flowerMessage.innerHTML = 'Untuk <strong>' + safeName + '</strong>, mawar ini mekar hari ini.';
+
+      formState.classList.remove('active');
+      flowerState.classList.add('active');
+      createSparkles();
+    }
+
+    function createSparkles() {
+      sparkles.innerHTML = '';
+      for (let i = 0; i < 18; i += 1) {
+        const dot = document.createElement('span');
+        dot.className = 'sparkle';
+        dot.style.left = Math.random() * 100 + 'vw';
+        dot.style.bottom = -Math.random() * 30 + 'px';
+        dot.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+        dot.style.animationDuration = (3 + Math.random() * 3).toFixed(2) + 's';
+        sparkles.appendChild(dot);
+      }
+    }
+
+    function handleContinue() {
+      const name = nameInput.value.trim();
+      if (!name) {
+        errorText.textContent = 'Nama belum diisi.';
+        nameInput.focus();
+        return;
+      }
+      errorText.textContent = '';
+      showFlowerState(name);
+    }
+
+    continueBtn.addEventListener('click', handleContinue);
+    nameInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        handleContinue();
+      }
+    });
+  </script>
+</body>
+</html>
